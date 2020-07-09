@@ -5,11 +5,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
-using System.Security.Cryptography.Asn1;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +17,7 @@ using Opc.Ua;
 
 namespace Microsoft.Azure.IIoT.OpcUa.Services.Vault.KeyVault
 {
-    public class KeyVaultCertFactory
+    public static class KeyVaultCertFactory
     {
         public const int SerialNumberLength = 20;
         public const int DefaultKeySize = 2048;
@@ -560,16 +560,17 @@ namespace Microsoft.Azure.IIoT.OpcUa.Services.Vault.KeyVault
             Asn1Tag fullNameChoice = context0;
             Asn1Tag generalNameUriChoice = new Asn1Tag(TagClass.ContextSpecific, 6);
 
-            using (AsnWriter writer = new AsnWriter(AsnEncodingRules.DER))
             {
+                AsnWriter writer = new AsnWriter(AsnEncodingRules.DER);
                 writer.PushSequence();
                 writer.PushSequence();
                 writer.PushSequence(distributionPointChoice);
                 writer.PushSequence(fullNameChoice);
                 writer.WriteCharacterString(
-                    generalNameUriChoice,
                     UniversalTagNumber.IA5String,
-                    distributionPoint);
+                    distributionPoint,
+                    generalNameUriChoice
+                    );
                 writer.PopSequence(fullNameChoice);
                 writer.PopSequence(distributionPointChoice);
                 writer.PopSequence();
@@ -589,16 +590,15 @@ namespace Microsoft.Azure.IIoT.OpcUa.Services.Vault.KeyVault
             )
         {
             if (String.IsNullOrEmpty(ocspResponder) &&
-               (caIssuerUrls == null ||
-               (caIssuerUrls != null && caIssuerUrls.Length == 0)))
+               (caIssuerUrls == null || caIssuerUrls.Length == 0))
             {
                 throw new ArgumentNullException(nameof(caIssuerUrls), "One CA Issuer Url or OCSP responder is required for the extension.");
             }
 
             var context0 = new Asn1Tag(TagClass.ContextSpecific, 0, true);
             Asn1Tag generalNameUriChoice = new Asn1Tag(TagClass.ContextSpecific, 6);
-            using (AsnWriter writer = new AsnWriter(AsnEncodingRules.DER))
             {
+                AsnWriter writer = new AsnWriter(AsnEncodingRules.DER);
                 writer.PushSequence();
                 if (caIssuerUrls != null)
                 {
@@ -607,9 +607,10 @@ namespace Microsoft.Azure.IIoT.OpcUa.Services.Vault.KeyVault
                         writer.PushSequence();
                         writer.WriteObjectIdentifier("1.3.6.1.5.5.7.48.2");
                         writer.WriteCharacterString(
-                            generalNameUriChoice,
                             UniversalTagNumber.IA5String,
-                            caIssuerUrl);
+                            caIssuerUrl,
+                            generalNameUriChoice
+                            );
                         writer.PopSequence();
                     }
                 }
@@ -618,9 +619,10 @@ namespace Microsoft.Azure.IIoT.OpcUa.Services.Vault.KeyVault
                     writer.PushSequence();
                     writer.WriteObjectIdentifier("1.3.6.1.5.5.7.48.1");
                     writer.WriteCharacterString(
-                        generalNameUriChoice,
                         UniversalTagNumber.IA5String,
-                        ocspResponder);
+                        ocspResponder,
+                        generalNameUriChoice
+                        );
                     writer.PopSequence();
                 }
                 writer.PopSequence();
@@ -640,14 +642,14 @@ namespace Microsoft.Azure.IIoT.OpcUa.Services.Vault.KeyVault
             X509SubjectKeyIdentifierExtension ski
             )
         {
-            using (AsnWriter writer = new AsnWriter(AsnEncodingRules.DER))
             {
+                AsnWriter writer = new AsnWriter(AsnEncodingRules.DER);
                 writer.PushSequence();
 
                 if (ski != null)
                 {
                     Asn1Tag keyIdTag = new Asn1Tag(TagClass.ContextSpecific, 0);
-                    writer.WriteOctetString(keyIdTag, HexToByteArray(ski.SubjectKeyIdentifier));
+                    writer.WriteOctetString(HexToByteArray(ski.SubjectKeyIdentifier), keyIdTag);
                 }
 
                 Asn1Tag issuerNameTag = new Asn1Tag(TagClass.ContextSpecific, 1);
@@ -663,7 +665,7 @@ namespace Microsoft.Azure.IIoT.OpcUa.Services.Vault.KeyVault
 
                 Asn1Tag issuerSerialTag = new Asn1Tag(TagClass.ContextSpecific, 2);
                 System.Numerics.BigInteger issuerSerial = new System.Numerics.BigInteger(issuerSerialNumber);
-                writer.WriteInteger(issuerSerialTag, issuerSerial);
+                writer.WriteInteger(issuerSerial, issuerSerialTag);
 
                 writer.PopSequence();
                 return new X509Extension("2.5.29.35", writer.Encode(), false);

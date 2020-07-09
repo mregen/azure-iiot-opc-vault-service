@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
+		azure-pipelines.yml = azure-pipelines.yml
 		common.props = common.props
 		Directory.Build.props = Directory.Build.props
 		license.txt = license.txt
@@ -62,6 +63,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{1724C5
 		Dockerfile.Windows-Server2016 = Dockerfile.Windows-Server2016
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{B84A0DBF-D394-4288-9B25-BEBD3ED2E438}"
+	ProjectSection(SolutionItems) = preProject
+		tools\icon.png = tools\icon.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{B6008AC4-DDCE-4F28-99E8-5B780F329CD6}"
+	ProjectSection(SolutionItems) = preProject
+		tools\scripts\get-matrix.ps1 = tools\scripts\get-matrix.ps1
+		tools\scripts\get-root.ps1 = tools\scripts\get-root.ps1
+		tools\scripts\get-version.ps1 = tools\scripts\get-version.ps1
+		tools\scripts\set-version.ps1 = tools\scripts\set-version.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{66742C94-56BA-4A36-8B12-84339C826375}"
+	ProjectSection(SolutionItems) = preProject
+		tools\templates\ci.yml = tools\templates\ci.yml
+		tools\templates\nuget.yml = tools\templates\nuget.yml
+		tools\templates\sdl.yml = tools\templates\sdl.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +115,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ECDA661E-A357-4472-B98F-3E0D807965A9} = {A3FF1EEF-11DA-470B-9C98-B043B3CB4DE7}
+		{B6008AC4-DDCE-4F28-99E8-5B780F329CD6} = {B84A0DBF-D394-4288-9B25-BEBD3ED2E438}
+		{66742C94-56BA-4A36-8B12-84339C826375} = {B84A0DBF-D394-4288-9B25-BEBD3ED2E438}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F947AAE7-2D6B-43C0-B5E6-824B8E4D7992}

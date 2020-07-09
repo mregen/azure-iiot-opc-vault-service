@@ -20,9 +20,6 @@ indent_size = 2
 [*.{sh}]
 end_of_line = lf
 
-[*.{cs}]
-charset = utf-8-bom
-
 [*.md]
 trim_trailing_whitespace = false
 
@@ -31,6 +28,8 @@ trim_trailing_whitespace = false
 ###############################
 
 [*.{cs}]
+charset = utf-8-bom
+
 # Organize usings
 dotnet_sort_system_directives_first = true:warning
 

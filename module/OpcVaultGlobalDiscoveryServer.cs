@@ -347,7 +347,7 @@ namespace Opc.Ua.Gds.Server
         private readonly ICertificateRequest _request = null;
         private readonly ICertificateGroup _certificateGroup = null;
         private readonly bool _autoApprove;
-        private X509CertificateValidator _userCertificateValidator;
+        private ICertificateValidator _userCertificateValidator;
 #endregion
     }
 }
